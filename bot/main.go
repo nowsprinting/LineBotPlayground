@@ -124,6 +124,49 @@ func lineBotCallback(w http.ResponseWriter, r *http.Request) {
 					sender := getSenderName(c, bot, event.Source.UserID)
 					replyMessage = "@" + sender + " メンションになっていますか？"
 
+				} else if message.Text == "/profile" {
+					//ユーザのプロファイルを取得（旧API）
+					senderProfile, err2 := bot.GetProfile(event.Source.UserID).Do()
+					if err2 != nil {
+						replyMessage = fmt.Sprintf("GetProfile()でプロファイルが取得できませんでした\nerr: %v", err2)
+					} else {
+						replyMessage = fmt.Sprintf("UserID: %v\nDisplayName: %v\nPictureURL: %v\nStatusMessage: %v",
+							senderProfile.UserID,
+							senderProfile.DisplayName,
+							senderProfile.PictureURL,
+							senderProfile.StatusMessage,
+						)
+					}
+
+				} else if message.Text == "/profile2" {
+					//ユーザのプロファイルを取得（新API）
+					switch event.Source.Type {
+					case linebot.EventSourceTypeGroup:
+						senderProfile, err2 := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
+						if err2 != nil {
+							replyMessage = fmt.Sprintf("GetGroupMemberProfile()でプロファイルが取得できませんでした\nerr: %v", err2)
+						} else {
+							replyMessage = fmt.Sprintf("UserID: %v\nDisplayName: %v\nPictureURL: %v\nStatusMessage: %v",
+								senderProfile.UserID,
+								senderProfile.DisplayName,
+								senderProfile.PictureURL,
+								senderProfile.StatusMessage,
+							)
+						}
+					case linebot.EventSourceTypeRoom:
+						senderProfile, err2 := bot.GetRoomMemberProfile(event.Source.RoomID, event.Source.UserID).Do()
+						if err2 != nil {
+							replyMessage = fmt.Sprintf("GetRoomMemberProfile()でプロファイルが取得できませんでした\nerr: %v", err2)
+						} else {
+							replyMessage = fmt.Sprintf("UserID: %v\nDisplayName: %v\nPictureURL: %v\nStatusMessage: %v",
+								senderProfile.UserID,
+								senderProfile.DisplayName,
+								senderProfile.PictureURL,
+								senderProfile.StatusMessage,
+							)
+						}
+					}
+
 				} else {
 					//オウム返し
 					sender := getSenderName(c, bot, event.Source.UserID)
