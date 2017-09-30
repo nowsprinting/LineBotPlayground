@@ -6,7 +6,13 @@ LINE Messaging APIの機能を検証するためのApp
 
 ### 仕様
 
-- Webhookで受け取った発言をオウム返しする
+Webhookで受け取った発言をオウム返しする。ただし、以下のコマンドが投稿されたときは特別な挙動をする
+
+- `/mention` "@"+ユーザIDでメンションを試みる（単なるテキストになった）
+- `/mention2` "@"+ユーザIDでメンションを試みる（単なるテキストになった）
+- `/profile` ユーザIDをキーに、`GetProfile()`でプロファイルを取得（Botと友だち登録していないと取得できない）
+- `/profile2` 追加されたAPI、`GetGroupMemberProfile()`および`GetRoomMemberProfile()`でプロファイルを取得（Botと友だち登録していないユーザの情報も取得できる）
+- `/version` バージョンを表示
 
 
 
