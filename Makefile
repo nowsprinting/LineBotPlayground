@@ -7,13 +7,13 @@ ifdef RUN
 endif
 
 version:
-	echo package backend > backend/version.go
-	echo const version = \"$(shell git describe --tags)\" >> backend/version.go
+	echo package bot > bot/version.go
+	echo const version = \"$(shell git describe --tags)\" >> bot/version.go
 
 test: version
 	gcloud config set project testapp
-	go test ./backend -v -covermode=count -coverprofile=coverage.out $(RUNFUNC)
+	go test ./bot -v -covermode=count -coverprofile=coverage.out $(RUNFUNC)
 
 deploy: version
 	gcloud config set project line-bot-playground
-	gcloud app deploy backend/app.yaml --version 1
+	gcloud app deploy bot/app.yaml --version 1
